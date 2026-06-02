@@ -1,5 +1,5 @@
 # Data (large files)
-data/
+/data/
 
 # LoRA weights
 lora_weights/*
