@@ -1,0 +1,23 @@
+# QC 阈值配置 — 对应任务 E1/E2/E3。
+# 说明：edge_alignment 的距离方向固定为 generated image edge -> mask edge。
+# 当前数值是代码默认/初始阈值；真实数据最终阈值需由 E2 标定后写回。
+
+edge_alignment:
+  max_mean_offset_px: 4.0
+  max_p99_offset_px: 12.0
+  canny_low: 50
+  canny_high: 150
+  mask_dilate_kernel: 0
+  min_gen_edge_pixels: 1
+  min_mask_edge_pixels: 1
+
+diversity:
+  max_ssim_similarity: 0.85
+
+calibration:
+  target_pass_rate_min_pct: 60.0
+  target_pass_rate_max_pct: 85.0
+  borderline_sample_count: 10
+
+reporting:
+  low_scene_pass_rate_pct: 20.0

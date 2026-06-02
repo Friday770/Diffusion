@@ -1,0 +1,11 @@
+# LoRA training (sd-scripts / kohya_ss)
+bitsandbytes
+lion-pytorch
+prodigyopt
+wandb
+
+# BLIP-2 captioning
+salesforce-lavis
+
+# Diversity metrics
+lpips

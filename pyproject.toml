@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blast-pile-diffusion"
+version = "0.1.0"
+description = "ControlNet sim2real translation pipeline for blast pile instance segmentation data generation"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "diffusers>=0.28",
+    "transformers>=4.40",
+    "accelerate>=0.30",
+    "safetensors",
+    "numpy",
+    "opencv-python-headless",
+    "Pillow",
+    "scipy",
+    "pyyaml",
+    "tqdm",
+    "pycocotools",
+]
+
+[project.optional-dependencies]
+train = [
+    "bitsandbytes",
+    "lion-pytorch",
+    "prodigyopt",
+    "wandb",
+]
+caption = [
+    "salesforce-lavis",
+]
+dev = [
+    "pytest",
+    "ruff",
+    "ipykernel",
+    "matplotlib",
+]
+
+[tool.setuptools.packages.find]
+include = ["blast_pile_diffusion*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,23 @@
+# LoRA 训练配置 — 对应技术路线 §4.4.2 / §7.2.3
+
+network_module: networks.lora
+rank: 32
+alpha: 32
+
+optimizer: AdamW8bit
+unet_lr: 1.0e-4
+text_encoder_lr: 5.0e-5
+warmup_ratio: 0.05
+
+total_steps: 2500
+batch_size: 1
+gradient_accumulation: 4
+
+trigger_word: "<mine_blast_pile>"
+resolution: 1024
+
+bucket_reso_steps: 64
+min_bucket_reso: 768
+max_bucket_reso: 1024
+
+mixed_precision: fp16

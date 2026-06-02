@@ -1,0 +1,54 @@
+# Data (large files)
+data/
+
+# LoRA weights
+lora_weights/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# HuggingFace cache
+.cache/
+weights/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Local tool caches
+.claude/
+.dist/
+.uv-cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+notice_doc_render/
+
+# LaTeX build outputs
+*.aux
+*.out
+*.toc
+*.synctex.gz
+
+# Non-code local documents
+patent_application.*
+network_architecture*.vsdx

@@ -1,0 +1,31 @@
+# blast-pile-diffusion 全局配置
+
+paths:
+  unity_raw: data/unity_raw
+  preprocessed: data/preprocessed
+  lora_real: data/lora_real
+  generated: data/generated
+  final_dataset: data/final_dataset
+  lora_weights: lora_weights
+
+device: cuda
+dtype: float16
+seed: 42
+
+resolution: 1024
+
+preprocessing:
+  depth:
+    near_clip: 0.5
+    far_clip: 100.0
+    fill_holes: true
+    hole_smooth_diameter: 5
+    auto_far_percentile: 99.0
+  canny:
+    low: 50
+    high: 150
+    dilate_kernel: 2
+
+sdxl:
+  base_model: stabilityai/stable-diffusion-xl-base-1.0
+  vae: madebyollin/sdxl-vae-fp16-fix

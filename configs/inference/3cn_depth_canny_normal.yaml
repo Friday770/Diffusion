@@ -1,0 +1,31 @@
+# 三路 ControlNet 推理配置 — 对应技术路线 §7.2.2 (升级方案)
+
+controlnets:
+  - name: depth
+    model: diffusers/controlnet-depth-sdxl-1.0
+    scale: 0.8
+  - name: canny
+    model: diffusers/controlnet-canny-sdxl-1.0
+    scale: 0.6
+  - name: normal
+    model: diffusers/controlnet-normal-sdxl
+    scale: 0.4
+
+lora:
+  path: lora_weights/mine_blast_pile.safetensors
+  weight: 1.2
+  required: true
+
+inference:
+  strength: 0.45
+  num_inference_steps: 30
+  guidance_scale: 6.5
+  seeds_per_sample: 4
+
+negative_prompt: "cartoon, smooth, water-worn, cobblestone, beach, blurry, low quality"
+
+# 可选 IP-Adapter
+# ip_adapter:
+#   model: h94/IP-Adapter
+#   subfolder: sdxl_models
+#   weight_name: ip-adapter_sdxl_vit-h.safetensors

@@ -1,0 +1,33 @@
+# 双路 ControlNet 推理配置 — 对应技术路线 §4.4.3 (起步方案)
+
+controlnets:
+  - name: depth
+    model: diffusers/controlnet-depth-sdxl-1.0
+    scale: 0.8
+  - name: canny
+    model: diffusers/controlnet-canny-sdxl-1.0
+    scale: 0.6
+
+lora:
+  path: lora_weights/mine_blast_pile.safetensors
+  weight: 1.0
+  required: true
+
+inference:
+  strength: 0.45
+  num_inference_steps: 30
+  guidance_scale: 6.5
+  seeds_per_sample: 4
+  output:
+    save_comparison: true
+    comparison_width: 384
+  image_validation:
+    enabled: true
+    black_threshold: 2
+    white_threshold: 253
+    min_std: 1.0
+  memory:
+    enable_model_cpu_offload: true
+    empty_cache_interval: 50
+
+negative_prompt: "cartoon, smooth, water-worn, cobblestone, beach, blurry, low quality"
