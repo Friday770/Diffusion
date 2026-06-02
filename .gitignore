@@ -2,7 +2,8 @@
 data/
 
 # LoRA weights
-lora_weights/
+lora_weights/*
+!lora_weights/.gitkeep
 *.safetensors
 *.ckpt
 *.pt
