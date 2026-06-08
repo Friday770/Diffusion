@@ -169,7 +169,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--lora-path",
         type=Path,
-        default=Path("lora_weights/mine_blast_pile.safetensors"),
+        default=Path("lora_weights/mine_blast_pile_v3_diffusers.safetensors"),
     )
     parser.add_argument("--output-dir", type=Path, default=Path("data/generated/lora_validation"))
     parser.add_argument("--num-samples", type=int, default=4)

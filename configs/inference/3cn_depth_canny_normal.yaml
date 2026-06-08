@@ -12,7 +12,7 @@ controlnets:
     scale: 0.4
 
 lora:
-  path: lora_weights/mine_blast_pile.safetensors
+  path: lora_weights/mine_blast_pile_v3_diffusers.safetensors
   weight: 1.2
   required: true
 

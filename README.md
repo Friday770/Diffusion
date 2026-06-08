@@ -39,7 +39,7 @@ lora_weights/
 The actual LoRA weights, for example:
 
 ```text
-lora_weights/mine_blast_pile.safetensors
+lora_weights/mine_blast_pile_v3_diffusers.safetensors
 ```
 
 should be downloaded or copied into that directory separately.
@@ -53,7 +53,7 @@ specifically for weight files.
 After obtaining the LoRA weight file, place it at:
 
 ```text
-lora_weights/mine_blast_pile.safetensors
+lora_weights/mine_blast_pile_v3_diffusers.safetensors
 ```
 
 The inference configs expect that path by default.
@@ -111,7 +111,7 @@ or reduce batch size, resolution, or rank.
 
 ## Inference
 
-After placing the LoRA file at `lora_weights/mine_blast_pile.safetensors`, run
+After placing the LoRA file at `lora_weights/mine_blast_pile_v3_diffusers.safetensors`, run
 inference with one of the provided configs:
 
 ```bash
