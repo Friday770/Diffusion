@@ -81,7 +81,11 @@ def _mock_validation_image(prompt: str, index: int, size: int) -> Image.Image:
 def _load_pipeline(base_model: str, torch_dtype: Any, device: str) -> Any:
     from diffusers import StableDiffusionXLPipeline
 
-    pipe = StableDiffusionXLPipeline.from_pretrained(base_model, torch_dtype=torch_dtype)
+    base_model_path = Path(base_model)
+    if base_model_path.is_file():
+        pipe = StableDiffusionXLPipeline.from_single_file(base_model, torch_dtype=torch_dtype)
+    else:
+        pipe = StableDiffusionXLPipeline.from_pretrained(base_model, torch_dtype=torch_dtype)
     return pipe.to(device)
 
 
@@ -102,6 +106,7 @@ def validate_lora(
     negative_prompt: str = DEFAULT_NEGATIVE_PROMPT,
     num_inference_steps: int = 30,
     guidance_scale: float = 7.0,
+    lora_weight: float = 1.0,
     seed: int = 42,
     device: str | None = None,
     mock: bool = False,
@@ -141,6 +146,8 @@ def validate_lora(
     factory = pipeline_factory or _load_pipeline
     pipe = factory(base_model, torch_dtype, device)
     _load_lora_weights(pipe, lora_path)
+    if hasattr(pipe, "set_adapters"):
+        pipe.set_adapters(["mine_style"], adapter_weights=[lora_weight])
 
     try:
         for i, (prompt, out_path) in enumerate(zip(prompts, paths)):
@@ -150,6 +157,8 @@ def validate_lora(
                 negative_prompt=negative_prompt,
                 num_inference_steps=num_inference_steps,
                 guidance_scale=guidance_scale,
+                width=image_size,
+                height=image_size,
                 generator=generator,
             ).images[0]
 
@@ -176,6 +185,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--base-model", default="stabilityai/stable-diffusion-xl-base-1.0")
     parser.add_argument("--device", default=None)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--image-size", type=int, default=1024)
+    parser.add_argument("--num-inference-steps", type=int, default=30)
+    parser.add_argument("--guidance-scale", type=float, default=7.0)
+    parser.add_argument("--lora-weight", type=float, default=1.0)
+    parser.add_argument("--negative-prompt", default=DEFAULT_NEGATIVE_PROMPT)
     parser.add_argument(
         "--mock",
         action="store_true",
@@ -192,10 +206,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_dir=args.output_dir,
         num_samples=args.num_samples,
         base_model=args.base_model,
+        negative_prompt=args.negative_prompt,
+        num_inference_steps=args.num_inference_steps,
+        guidance_scale=args.guidance_scale,
+        lora_weight=args.lora_weight,
         device=args.device,
         seed=args.seed,
         mock=args.mock,
         dry_run=args.dry_run,
+        image_size=args.image_size,
     )
     return 0
 
