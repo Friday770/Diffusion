@@ -25,8 +25,8 @@ from blast_pile_diffusion.lora.prepare_dataset import (  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="准备 LoRA 训练数据")
-    parser.add_argument("--image-dir", type=Path, default=Path("data/lora_real/images"))
-    parser.add_argument("--caption-dir", type=Path, default=Path("data/lora_real/captions"))
+    parser.add_argument("--image-dir", type=Path, default=Path("PhotoForLoRA"))
+    parser.add_argument("--caption-dir", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=Path("data/lora_real/kohya_dataset"))
     parser.add_argument("--concept-name", default="mine_blast_pile")
     parser.add_argument("--trigger-word", default=TRIGGER_WORD)
@@ -34,6 +34,11 @@ def parse_args() -> argparse.Namespace:
         "--use-blip2",
         action="store_true",
         help="使用 BLIP-2 自动生成 caption",
+    )
+    parser.add_argument(
+        "--generate-captions",
+        action="store_true",
+        help="Generate captions instead of using existing .txt files next to the images.",
     )
     parser.add_argument(
         "--skip-caption-generation",
@@ -52,24 +57,26 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    caption_dir = args.caption_dir or args.image_dir
+    should_generate_captions = args.generate_captions and not args.skip_caption_generation
 
-    if not args.skip_caption_generation:
+    if should_generate_captions:
         print("=== Step 2a: 生成 Caption ===")
         count = generate_captions_for_directory(
             args.image_dir,
-            args.caption_dir,
+            caption_dir,
             use_blip2=args.use_blip2,
             trigger_word=args.trigger_word,
             overwrite=not args.no_overwrite_captions,
         )
-        print(f"生成/确认 {count} 个 caption -> {args.caption_dir}")
+        print(f"生成/确认 {count} 个 caption -> {caption_dir}")
     else:
-        print("=== Step 2a: 跳过 Caption 生成 ===")
+        print(f"=== Step 2a: 使用已有 Caption -> {caption_dir} ===")
 
     print("\n=== Step 2b: 构建 kohya_ss 训练目录 ===")
     concept_dir = build_kohya_dataset(
         args.image_dir,
-        args.caption_dir,
+        caption_dir,
         args.output_dir,
         concept_name=args.concept_name,
         repeats=args.repeats,

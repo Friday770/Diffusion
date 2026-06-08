@@ -133,6 +133,24 @@ def test_train_command_is_dry_run_compatible_and_uses_txt_captions(tmp_path):
     assert exit_code == 0
 
 
+def test_5090_train_command_uses_high_vram_profile(tmp_path):
+    config_path = PROJECT_ROOT / "configs" / "lora" / "sdxl_5090_32gb.yaml"
+    base_config_path = PROJECT_ROOT / "configs" / "base.yaml"
+    train_data_dir = tmp_path / "kohya_dataset"
+    output_dir = tmp_path / "lora_weights"
+
+    cmd = build_train_command(config_path, base_config_path, train_data_dir, output_dir)
+
+    assert "--train_batch_size" in cmd
+    assert cmd[cmd.index("--train_batch_size") + 1] == "2"
+    assert "--gradient_accumulation_steps" in cmd
+    assert cmd[cmd.index("--gradient_accumulation_steps") + 1] == "2"
+    assert "--sdpa" in cmd
+    assert "--gradient_checkpointing" in cmd
+    assert "--mixed_precision" in cmd
+    assert "bf16" in cmd
+
+
 def test_lora_validator_mock_creates_images_and_manifest(tmp_path):
     output_dir = tmp_path / "validation"
     paths = validate_lora(

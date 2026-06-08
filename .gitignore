@@ -1,5 +1,7 @@
 # Data (large files)
 /data/
+/PhotoForLoRA/
+/PhotoForLoRA.zip
 
 # LoRA weights
 lora_weights/*

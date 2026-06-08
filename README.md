@@ -60,18 +60,29 @@ The inference configs expect that path by default.
 
 ## LoRA Data Preparation
 
-The expected image directory for LoRA training is:
+The current LoRA source dataset is expected at:
 
 ```text
-data/lora_real/images/
+PhotoForLoRA/
 ```
 
-Prepare captions and the kohya/sd-scripts dataset structure:
+The folder should contain paired image and prompt files:
+
+```text
+PhotoForLoRA/
+  0001.jpg
+  0001.txt
+  0002.jpg
+  0002.txt
+```
+
+Prepare the kohya/sd-scripts dataset structure without overwriting the existing
+prompts:
 
 ```bash
 python scripts/02_prepare_lora_data.py \
-  --image-dir data/lora_real/images \
-  --caption-dir data/lora_real/captions \
+  --image-dir PhotoForLoRA \
+  --caption-dir PhotoForLoRA \
   --output-dir data/lora_real/kohya_dataset \
   --clean
 ```
@@ -82,14 +93,21 @@ Training is designed to run on a server with `sd-scripts` available:
 
 ```bash
 python -m blast_pile_diffusion.lora.train_launcher \
+  --config configs/lora/sdxl_5090_32gb.yaml \
   --sd-scripts-dir sd-scripts \
   --train-data-dir data/lora_real/kohya_dataset \
   --output-dir lora_weights \
   --validate-output
 ```
 
-For 24GB GPUs, a lower-memory SDXL LoRA setting such as rank 16 and 768
-resolution is recommended.
+The default training config is tuned for a 32GB RTX 5090-class GPU. It uses SDXL
+at 1024 resolution, rank 32, bf16 mixed precision, SDPA attention, cached
+latents, and an effective batch size of 4 (`batch_size=2`,
+`gradient_accumulation=2`). If the installed `sd-scripts` version does not
+support `--sdpa`, set `sdpa: false` in `configs/lora/sdxl_5090_32gb.yaml`.
+
+For 24GB GPUs, use the more conservative `configs/lora/sdxl_rank32.yaml` profile
+or reduce batch size, resolution, or rank.
 
 ## Inference
 

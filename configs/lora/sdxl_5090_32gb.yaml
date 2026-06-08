@@ -1,0 +1,45 @@
+# SDXL LoRA training profile for a 32GB RTX 5090-class GPU.
+#
+# This keeps the effective batch size at 4 while using a larger per-step batch
+# than the conservative 24GB profile. If sd-scripts is too old to support
+# --sdpa, set sdpa: false.
+
+network_module: networks.lora
+rank: 32
+alpha: 32
+
+optimizer: AdamW8bit
+unet_lr: 1.0e-4
+text_encoder_lr: 5.0e-5
+lr_scheduler: cosine
+warmup_ratio: 0.05
+
+total_steps: 2500
+batch_size: 2
+gradient_accumulation: 2
+
+trigger_word: "<mine_blast_pile>"
+resolution: 1024
+
+enable_bucket: true
+bucket_reso_steps: 64
+min_bucket_reso: 768
+max_bucket_reso: 1024
+
+mixed_precision: bf16
+cache_latents: true
+cache_latents_to_disk: true
+shuffle_caption: true
+caption_extension: ".txt"
+
+gradient_checkpointing: true
+sdpa: true
+xformers: false
+
+max_data_loader_n_workers: 4
+persistent_data_loader_workers: true
+
+save_model_as: safetensors
+save_every_n_steps: 500
+logging_dir: logs
+seed: 42

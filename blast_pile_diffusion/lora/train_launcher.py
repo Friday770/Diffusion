@@ -134,6 +134,9 @@ def build_train_command(
         str(cfg.get("logging_dir", "logs")),
     ]
 
+    if "max_data_loader_n_workers" in cfg:
+        cmd.extend(["--max_data_loader_n_workers", str(cfg["max_data_loader_n_workers"])])
+
     if tokenizer_cache_dir is not None:
         cmd.extend(["--tokenizer_cache_dir", str(tokenizer_cache_dir)])
 
@@ -141,7 +144,14 @@ def build_train_command(
     _as_bool_flag(cmd, bool(cfg.get("cache_latents", True)), "--cache_latents")
     _as_bool_flag(cmd, bool(cfg.get("cache_latents_to_disk", True)), "--cache_latents_to_disk")
     _as_bool_flag(cmd, bool(cfg.get("shuffle_caption", True)), "--shuffle_caption")
+    _as_bool_flag(cmd, bool(cfg.get("gradient_checkpointing", False)), "--gradient_checkpointing")
+    _as_bool_flag(cmd, bool(cfg.get("sdpa", False)), "--sdpa")
     _as_bool_flag(cmd, bool(cfg.get("xformers", False)), "--xformers")
+    _as_bool_flag(
+        cmd,
+        bool(cfg.get("persistent_data_loader_workers", False)),
+        "--persistent_data_loader_workers",
+    )
 
     return cmd
 
@@ -249,7 +259,7 @@ def launch_training(
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Launch SDXL LoRA training via sd-scripts.")
-    parser.add_argument("--config", type=Path, default=Path("configs/lora/sdxl_rank32.yaml"))
+    parser.add_argument("--config", type=Path, default=Path("configs/lora/sdxl_5090_32gb.yaml"))
     parser.add_argument("--base-config", type=Path, default=Path("configs/base.yaml"))
     parser.add_argument("--train-data-dir", type=Path, default=Path("data/lora_real/kohya_dataset"))
     parser.add_argument("--output-dir", type=Path, default=Path("lora_weights"))
