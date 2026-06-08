@@ -97,6 +97,7 @@ python -m blast_pile_diffusion.lora.train_launcher \
   --sd-scripts-dir sd-scripts \
   --train-data-dir data/lora_real/kohya_dataset \
   --output-dir lora_weights \
+  --pretrained-model-name-or-path weight/sdxl_base.safetensors \
   --validate-output
 ```
 

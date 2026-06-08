@@ -13,6 +13,7 @@ lora_weights/*
 
 # HuggingFace cache
 .cache/
+weight/
 weights/
 
 # Python
